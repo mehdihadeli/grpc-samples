@@ -1,0 +1,110 @@
+{
+  "AppSettings": {
+    "MachineNumber": "1",
+    "ApplicationName": "MockSite"
+  },
+  "Aop": {
+    "PerformanceInterceptor": "true"
+  },
+  "DomainService": {
+    "UserUseDb": "0",
+    "Test": {
+      "HostName": "localhost",
+      "Port": "15001",
+      "DbConnection": "Server=localhost; Port=3326; Database=TestDB;Uid=root;Pwd=pass.123;"
+    },
+    "MongoTest": {
+      "HostName": "localhost",
+      "Port": "27017",
+      "DbConnection": "mongodb://localhost:27017",
+      "Database": "mongoTest",
+      "Collection": "User"
+    },
+    "RedisTest": {
+      "DbConnection": "localhost:6379"
+    }
+  },
+  "Global": {
+    "Serilog": {
+      "Using": [
+        "MockSite.Common.Logging"
+      ],
+      "MinimumLevel": "Debug",
+      "Enrich": [
+        "FromLogContext",
+        "WithThreadId",
+        "WithApplicationName"
+      ],
+      "WriteTo:GeneralFileSubLogger": {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo:File": {
+              "Name": "File",
+              "Args": {
+                "path": "../../tmp/logs/All-.log",
+                "rollingInterval": "Day",
+                "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ApplicationName}][{ThreadId}]{Message:lj} {NewLine}",
+                "fileSizeLimitBytes": 20480000,
+                "rollOnFileSizeLimit": true,
+                "retainedFileCountLimit": 31
+              }
+            }
+          }
+        }
+      },
+      "WriteTo:ErrorFileSubLogger": {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo:File": {
+              "Name": "File",
+              "Args": {
+                "path": "../../tmp/logs/Exception/Exception-.log",
+                "rollingInterval": "Day",
+                "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ApplicationName}][{ThreadId}]{Message:lj} {NewLine}",
+                "fileSizeLimitBytes": 20480000,
+                "rollOnFileSizeLimit": true,
+                "retainedFileCountLimit": 31
+              }
+            },
+            "Filter": [
+              {
+                "Name": "ByIncludingOnly",
+                "Args": {
+                  "expression": "Contains(@Message, '[Exception]')"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "WriteTo:PerformanceFileSubLogger": {
+        "Name": "Logger",
+        "Args": {
+          "configureLogger": {
+            "WriteTo:File": {
+              "Name": "File",
+              "Args": {
+                "path": "../../tmp/logs/Performance/Performance-.log",
+                "rollingInterval": "Day",
+                "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{ApplicationName}][{ThreadId}]{Message:lj} {NewLine}",
+                "fileSizeLimitBytes": 20480000,
+                "rollOnFileSizeLimit": true,
+                "retainedFileCountLimit": 31
+              }
+            },
+            "Filter": [
+              {
+                "Name": "ByIncludingOnly",
+                "Args": {
+                  "expression": "Contains(@Message, '[Perf]')"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

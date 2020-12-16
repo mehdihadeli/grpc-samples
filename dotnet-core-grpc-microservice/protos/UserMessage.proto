@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package Account; //will be placed in a namespace matching the package name if csharp_namespace is not specified
+option csharp_namespace = "MockSite.Message";
+import "CommonMessage.proto";
+
+message AuthenticateResponse {
+    Common.ResponseCode Code = 1;
+    string Message = 2;
+    User Data = 3;
+}
+
+message UsersResponse {
+    Common.ResponseCode Code = 1;
+    string Message = 2;
+    repeated User Data = 3;
+}
+
+message UserResponse {
+    Common.ResponseCode Code = 1;
+    string Message = 2;
+    User Data = 3;
+}
+
+message User {
+  int32 Id = 1;
+  string Code = 2;
+  string Name = 3;
+  string Email = 4;
+}
+
+message Users {
+  repeated User Value = 1;
+}
+
+message QueryUserMessage {
+  int32 Id = 1;
+}
+
+message CreateUserMessage {
+  string Code = 1;
+  string Name = 2;
+  string Email = 3;
+  string Password = 4;
+}
+
+message UpdateUserMessage {
+  int32 Id = 1;
+  string Name = 2;
+  string Email = 3;
+}
+
+message AuthenticateMessage{
+    string Name = 1;
+    string Password = 2;
+}
+
+message QueryUsersMessage{
+    string Code = 1;
+    string Name = 2;
+    string Email = 3;
+}
